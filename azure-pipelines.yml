@@ -1,4 +1,4 @@
-# Build and test ASP.NET Core projects targeting .NET Core.
+
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
@@ -14,4 +14,16 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
-  
+  # Build and test ASP.NET Core projects targeting .NET Core.
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Visual Studio Enterprise (96451f29-ef49-482d-8ef1-79781bb89e9b)'
+    appType: 'webAppLinux'
+    WebAppName: 'proyectojuanjose'
+    deployToSlotOrASE: true
+    ResourceGroupName: 'curso'
+    SlotName: 'production'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'DOTNETCORE|2.1'
+    StartupCommand: 'npm start'
